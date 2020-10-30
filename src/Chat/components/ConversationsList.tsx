@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { IAppState } from '../../appReducer';
 import { IConversation } from '../types';
-import { ConversationsListItem } from './ConversationsListItem';
+import ConversationsListItem from './ConversationsListItem';
 
 interface ConversationsListProps {
   conversations: IConversation[];

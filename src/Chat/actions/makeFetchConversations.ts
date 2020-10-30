@@ -1,5 +1,6 @@
 import { getConversations } from "../../api/messages"
 import { IAppState } from "../../appReducer";
+import { makeVerifyUnseenMessages } from "./makeVerifyUnseenMessages";
 import { updateConversationList } from "./updateConversationList"
 
 export function makeFetchConversations(){
@@ -15,19 +16,6 @@ export function makeFetchConversations(){
         const connectedUser = { conversationsSeen: { '123456': 'DATE' } }
         const conversation = {_id: '123456', unseenMessages: 0, messages: [mess1]}
       */
-      conversations.map(conversation => {
-        const lastSeenDate = connectedUser.conversationsSeen[conversation._id]
-        let unseenMessages;
-        if(!lastSeenDate) {
-          unseenMessages = conversation.messages.length;
-        } else {
-          unseenMessages = conversation.messages
-                      .filter(message => new Date(message.createdAt) > new Date(lastSeenDate))
-                      .length
-        }
-        conversation.unseenMessages = unseenMessages;
-        return conversation
-      })
       /*
         conversationns = [
           {_id: '1234567', unseenMessages: 2, messages: [mess1]},
@@ -39,7 +27,8 @@ export function makeFetchConversations(){
         const conversation = {_id: '123456', unseenMessages: 0, messages: [mess1]}
       */
 
-      dispatch(updateConversationList(conversations));
+      await dispatch(updateConversationList(conversations));
+      dispatch(makeVerifyUnseenMessages());
     } catch(err) {
       console.error(err);
     }
